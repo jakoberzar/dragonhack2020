@@ -13,3 +13,10 @@ source .venv/bin/activate
 ```
 pip install -r requirements.txt
 ```
+
+## Running
+
+```
+export FLASK_APP=main.py
+flask run
+```
