@@ -8,6 +8,10 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello, World!'
 
+@app.route('/fireMap/fireMap.obf.zip')
+def fireMap():
+    return send_file('fireMap.obf.zip', attachment_filename='file.zip')
+
 
 @app.route('/osmand/<int:zoom>/<int:x>/<int:y>.png')
 def osmand(zoom, x, y):

@@ -1,0 +1,102 @@
+{
+   "version":1,
+   "items":[
+
+      {
+         "type":"PLUGIN",
+         "pluginId":"fireDetection.plugin",
+         "version" : 1,
+         "icon": {
+             "" : "@plugin-id.png"
+         },
+         "image": {
+             "" :"@plugin-image.webp"
+         },
+         "name":{
+            "":"FireDetection"
+         },
+         "description":{
+            "":"This is a fire detection Plugin."
+         }
+      },
+
+      {
+         "type":"RESOURCES",
+         "pluginId":"fireDetection.plugin",
+         "file":"res"
+      },
+
+      {
+         "type":"DOWNLOADS",
+         "pluginId":"fireDetection.plugin",
+         "items":[
+            {
+               "scope-id":"offline-maps",
+               "path":"fireMap",
+               "header-color":"#002E64",
+               "name":{
+                  "":"FireMap"
+               },
+               "icon":{
+                  "":"ic_world_globe_dark"
+               },
+               "items":[
+                  {
+                     "name":{
+                        "":"Online"
+                     },
+                     "filename":"fireMap.obf.zip",
+                     "type":"map",
+                     "timestamp":1582994500,
+                     "containerSize":46829859,
+                     "contentSize":46829859,
+                     "description":{
+                        "text":{
+                           "":"Zoom min: 0<br />Zoom max: 19<br />"
+                        },
+                        "image":[
+                           ""
+                        ]
+                     },
+                     "downloadurl":"http:\/\/192.168.2.115:5000\/fireMap\/",
+                     "firstsubname":{
+                        "":"FireMap"
+                     },
+                     "secondsubname":{
+                        "":""
+                     }
+                }
+           ]
+        }]
+    },
+
+    {
+      "type":"PROFILE",
+      "pluginId":"fireDetection.plugin",
+      "appMode":{
+         "userProfileName" : "FireDetection Profile"
+      }
+    },
+
+      {
+         "type":"MAP_SOURCES",
+         "pluginId":"fireDetection.plugin",
+         "items": [{
+            "sql": false,
+            "name": "FireOverlay",
+            "minZoom": 1,
+            "maxZoom": 19,
+            "url": "http:\/\/192.168.2.115:5000\/osmand\/{0}\/{1}\/{2}.png",
+            "ellipsoid": false,
+            "inverted_y": false,
+            "timesupported": false,
+            "expire": 1,
+            "inversiveZoom": false,
+            "ext": ".png",
+            "tileSize": 256,
+            "bitDensity": 8,
+            "avgSize": 18000
+        }]
+      }
+   ]
+}
