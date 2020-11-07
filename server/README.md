@@ -18,5 +18,6 @@ pip install -r requirements.txt
 
 ```
 export FLASK_APP=main.py
-flask run
+export FLASK_ENV=development # Enable debugging & automatic reloading
+flask run --host=0.0.0.0 # --host is added so the server can be seen on the network
 ```
