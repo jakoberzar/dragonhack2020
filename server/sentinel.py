@@ -158,5 +158,7 @@ def get_and_save_fire_damage(coords, cache_path):
         blurred[:, :, 0] = gaussian_filter(blurred[:, :, 0], sigma)
         blurred[:, :, 2] = gaussian_filter(blurred[:, :, 2], sigma)
         blurred[:, :, 3] = gaussian_filter(blurred[:, :, 3], sigma)
+    else:
+        blurred = convolved
 
     matplotlib.image.imsave(cache_path, blurred)
