@@ -133,24 +133,32 @@ def get_and_save_fire_damage(coords, cache_path):
         result = result + daily_data
 
     # Convolve the image to expand the area
-    kernel = 27
-    convolved = np.copy(result)
-    convolved[:, :, 0] = convolve2d(
-        result[:, :, 0], np.ones((kernel, kernel)), mode="same")
-    convolved[:, :, 2] = convolve2d(
+    kernel = 5
+    active_factor = 15
+    convolved_red = convolve2d(
+        result[:, :, 0], np.ones((active_factor, active_factor)), mode="same")
+    convolved_blue = convolve2d(
         result[:, :, 2], np.ones((kernel, kernel)), mode="same")
-    convolved[:, :, 3] = convolve2d(
-        result[:, :, 3], np.ones((kernel, kernel)), mode="same")
+    convolved_alpha_mask = (convolved_red > 0) | (convolved_blue > 0)
+
+    convolved = np.copy(result)
+    convolved[:, :, 0] = convolved_red
+    convolved[:, :, 2] = convolved_blue
+    convolved[:, :, 3][convolved_alpha_mask] = 255
 
     # Make pink red again
     mask_pink = (convolved[:, :, 0] > 0) & (convolved[:, :, 2] > 0)
     convolved[:, :, 2][mask_pink] = 0
 
     # Blur the image for a nicer look
-    blurred = np.copy(convolved)
-    sigma = 10
-    blurred[:, :, 0] = gaussian_filter(blurred[:, :, 0], sigma)
-    blurred[:, :, 2] = gaussian_filter(blurred[:, :, 2], sigma)
-    blurred[:, :, 3] = gaussian_filter(blurred[:, :, 3], sigma)
+    blur = False
+    if blur:
+        blurred = np.copy(convolved)
+        sigma = 10
+        blurred[:, :, 0] = gaussian_filter(blurred[:, :, 0], sigma)
+        blurred[:, :, 2] = gaussian_filter(blurred[:, :, 2], sigma)
+        blurred[:, :, 3] = gaussian_filter(blurred[:, :, 3], sigma)
+    else:
+        blurred = convolved
 
     matplotlib.image.imsave(cache_path, blurred)
