@@ -47,5 +47,10 @@ def osmandv2(zoom, x, y):
     # margin = 0.2
     # cords = [lon - margin, lat - margin, lon + margin, lat + margin]
 
-    get_and_save_fire_damage(coords, cache_path)
-    return send_file(cache_path, attachment_filename='overlay.png')
+    try:
+        get_and_save_fire_damage(coords, cache_path)
+        return send_file(cache_path, attachment_filename='overlay.png')
+    except Exception as e:
+        print("\nERROR:", e)
+        return send_file('empty_area.png',
+                         attachment_filename='empty_area.png')
