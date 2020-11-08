@@ -1,12 +1,17 @@
 from osmand import *
 from sentinel import get_and_save_false_color_map, get_and_save_fire_damage
 from flask import Flask, send_file
+from os import path
 app = Flask(__name__)
+
+# TOGGLE ON TO TURN ON SIMPLE IMAGE CACHING
+CACHE = True
 
 
 @app.route('/')
 def hello_world():
     return 'Hello, World!'
+
 
 @app.route('/fireMap/fireMap.obf.zip')
 def fireMap():
@@ -15,8 +20,6 @@ def fireMap():
 
 @app.route('/osmand/<int:zoom>/<int:x>/<int:y>.png')
 def osmand(zoom, x, y):
-    # return 'testing!'
-
     coords = getTileCoordinates(x, y, zoom)
 
     # for testing;
@@ -26,11 +29,14 @@ def osmand(zoom, x, y):
     # coords = [lon - margin, lat - margin, lon + margin, lat + margin]
 
     get_and_save_false_color_map(coords)
-    return send_file('file.png', attachment_filename='file.jpg')
+    return send_file('file.png', attachment_filename='file.png')
+
 
 @app.route('/osmandv2/<int:zoom>/<int:x>/<int:y>.png')
 def osmandv2(zoom, x, y):
-    # return 'testing!'
+    cache_path = f'./cache/v2/{zoom}-{x}-{y}.png'
+    if (CACHE and path.exists(cache_path)):
+        return send_file(cache_path, attachment_filename='overlay.png')
 
     coords = getTileCoordinates(x, y, zoom)
 
@@ -41,5 +47,5 @@ def osmandv2(zoom, x, y):
     # margin = 0.2
     # cords = [lon - margin, lat - margin, lon + margin, lat + margin]
 
-    get_and_save_fire_damage(coords)
-    return send_file('overlay.png', attachment_filename='overlay.jpg')
+    get_and_save_fire_damage(coords, cache_path)
+    return send_file(cache_path, attachment_filename='overlay.png')

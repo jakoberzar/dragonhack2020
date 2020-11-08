@@ -60,7 +60,7 @@ def get_and_save_false_color_map(coords):
     matplotlib.image.imsave('file.png', response[0])
 
 
-def get_and_save_fire_damage(coords):
+def get_and_save_fire_damage(coords, cache_path):
     bbox = BBox(bbox=coords, crs=CRS.WGS84)
     size = (256, 256)
 
@@ -84,7 +84,8 @@ def get_and_save_fire_damage(coords):
 
     # Check where a fire was active in last 2 months (one check per week)
     today = datetime.datetime.today().date()
-    time_range_days = 60
+    # today = datetime.datetime(2016, 9, 1)
+    time_range_days = 30
     step = 7
     time_range_list = []
     for i in range(0, time_range_days, step):
@@ -109,10 +110,12 @@ def get_and_save_fire_damage(coords):
             size=size
         )
 
-    list_of_requests = [get_true_color_request(time_range) for time_range in time_range_list]
-    list_of_requests = [request.download_list[0] for request in list_of_requests]
-
-    data_orig = SentinelHubDownloadClient().download(list_of_requests, max_threads=5)
+    list_of_requests = [get_true_color_request(
+        time_range) for time_range in time_range_list]
+    # list_of_requests = [request.download_list[0]
+    #                     for request in list_of_requests]
+    # data_orig = SentinelHubDownloadClient().download(list_of_requests, max_threads=5)
+    data_orig = [request.get_data() for request in list_of_requests]
 
     data = np.copy(data_orig)
     result = np.zeros_like(data[0])
@@ -133,9 +136,12 @@ def get_and_save_fire_damage(coords):
     # Convolve the image to expand the area
     kernel = 31
     convolved = np.copy(result)
-    convolved[:, :, 0] = convolve2d(result[:, :, 0], np.ones((kernel, kernel)), mode="same")
-    convolved[:, :, 2] = convolve2d(result[:, :, 2], np.ones((kernel, kernel)), mode="same")
-    convolved[:, :, 3] = convolve2d(result[:, :, 3], np.ones((kernel, kernel)), mode="same")
+    convolved[:, :, 0] = convolve2d(
+        result[:, :, 0], np.ones((kernel, kernel)), mode="same")
+    convolved[:, :, 2] = convolve2d(
+        result[:, :, 2], np.ones((kernel, kernel)), mode="same")
+    convolved[:, :, 3] = convolve2d(
+        result[:, :, 3], np.ones((kernel, kernel)), mode="same")
 
     # Make pink red again
     mask_pink = (convolved[:, :, 0] > 0) & (convolved[:, :, 2] > 0)
@@ -148,4 +154,4 @@ def get_and_save_fire_damage(coords):
     blurred[:, :, 2] = gaussian_filter(blurred[:, :, 2], sigma)
     blurred[:, :, 3] = gaussian_filter(blurred[:, :, 3], sigma)
 
-    matplotlib.image.imsave('overlay.png', blurred)
+    matplotlib.image.imsave(cache_path, blurred)
