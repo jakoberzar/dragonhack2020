@@ -115,16 +115,15 @@ def get_and_save_fire_damage(coords, cache_path):
     # list_of_requests = [request.download_list[0]
     #                     for request in list_of_requests]
     # data_orig = SentinelHubDownloadClient().download(list_of_requests, max_threads=5)
-    data_orig = [request.get_data() for request in list_of_requests]
+    data_orig = [request.get_data()[0] for request in list_of_requests]
 
     data = np.copy(data_orig)
     result = np.zeros_like(data[0])
 
     first_day_found = False
     for daily_data in data:
-        if not first_day_found and np.sum(daily_data) > 2000:
-            # Find the most recent day where there was fire - color it red,
-            # locations on previous days are blue
+        if not first_day_found:
+            # Color the active fire red, damaged area blue
             first_day_found = True
 
             # Switch red and blue
@@ -134,7 +133,7 @@ def get_and_save_fire_damage(coords, cache_path):
         result = result + daily_data
 
     # Convolve the image to expand the area
-    kernel = 31
+    kernel = 27
     convolved = np.copy(result)
     convolved[:, :, 0] = convolve2d(
         result[:, :, 0], np.ones((kernel, kernel)), mode="same")
