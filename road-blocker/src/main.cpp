@@ -19,7 +19,11 @@
 
 #include <cstdint> // for std::uint64_t
 #include <cstdlib> // for std::exit
+#include <filesystem>
 #include <iostream> // for std::cout, std::cerr
+#include <string>
+#include <vector>
+namespace fs = std::filesystem;
 
 // Allow any format of input files (XML, PBF, ...)
 #include <osmium/io/any_input.hpp>
@@ -50,7 +54,7 @@ using location_handler_type = osmium::handler::NodeLocationsForWays<index_type>;
 // Handler derive from the osmium::handler::Handler base class. Usually you
 // overwrite functions node(), way(), and relation(). Other functions are
 // available, too. Read the API documentation for details.
-struct CountHandler : public osmium::handler::Handler {
+struct BlockageHandler : public osmium::handler::Handler {
     std::uint64_t nodes = 0;
     std::uint64_t ways = 0;
     std::uint64_t nodes_with_ways = 0;
@@ -70,7 +74,15 @@ struct CountHandler : public osmium::handler::Handler {
         ++relations;
     }
 
-}; // struct CountHandler
+}; // struct BlockageHandler
+
+std::vector<std::string> paths() {
+    std::vector<std::string> filepaths;
+    std::string path = "imgs";
+    for (const auto& entry : fs::directory_iterator(path))
+        filepaths.push_back(entry.path());
+    return filepaths;
+}
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -93,9 +105,12 @@ int main(int argc, char* argv[]) {
         // to the ways
         location_handler_type location_handler{index};
 
-        // Create an instance of our own CountHandler and push the data from the
+        std::vector<std::string> files = paths();
+        for (auto& path : files) { std::cout << path << std::endl; }
+
+        // Create an instance of our own BlockageHandler and push the data from the
         // input file through it.
-        CountHandler handler;
+        BlockageHandler handler;
         osmium::apply(reader, location_handler, handler);
 
         // You do not have to close the Reader explicitly, but because the
