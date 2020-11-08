@@ -1,5 +1,5 @@
 from osmand import *
-from sentinel import get_and_save_false_color_map
+from sentinel import get_and_save_false_color_map, get_and_save_fire_damage
 from flask import Flask, send_file
 app = Flask(__name__)
 
@@ -27,3 +27,19 @@ def osmand(zoom, x, y):
 
     get_and_save_false_color_map(coords)
     return send_file('file.png', attachment_filename='file.jpg')
+
+@app.route('/osmandv2/<int:zoom>/<int:x>/<int:y>.png')
+def osmandv2(zoom, x, y):
+    # return 'testing!'
+
+    coords = getTileCoordinates(x, y, zoom)
+
+    # for testing;
+    # CALIFORNIA
+    # lat = 39.72144792527233
+    # lon = -121.26708984375
+    # margin = 0.2
+    # cords = [lon - margin, lat - margin, lon + margin, lat + margin]
+
+    get_and_save_fire_damage(coords)
+    return send_file('overlay.png', attachment_filename='overlay.jpg')
