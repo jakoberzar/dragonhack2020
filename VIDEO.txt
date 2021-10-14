@@ -1,0 +1,47 @@
+-- sofa: Person 1
+- Motivation
+    - Climate change => forest fires/floods/etc. more and more likely
+    - In case of natural diseasters, help people to get out of an endangered area
+
+-- demo/phone: Person 2
+- Idea
+    - "Our sevice shoud be as easily usable by people affected by natural disasters"
+    - Using satelite data from SentinelHub
+    - Project fire detection on a map
+        - Make it easy for people to act on information
+        - Plugin for open source navigation app Osmand
+        - Overlay
+            - Red: active fire (most recent data from SentinelHub)
+            - Blue: damaged area (fire active in the past)
+            - more to come
+        - User marks routs that should be avoided
+
+-- phone: Person 3
+    - Possible improvement
+        - Automatic route calculation
+        - Prediction of furure affected areas
+            - based on vegetation, weather
+
+Our service can be greatly imroved, for example by
+- automatic route calculation, instead user having to manually blocking the road
+- prediction of future afected areas, based on vegetation near the fire or
+
+
+================
+
+## TUMuchSpaghetti(Code)
+
+# Short description
+A service to help people avoid areas affected by natural disasters
+
+Technologies used:
+- Sentinel Hub (Python library)
+- Flask server
+- Osmand Android App (open-source navigation app)
+- Python
+- C++
+
+# Link to project repository
+https://github.com/jakoberzar/dragonhack2020
+
+# Link to video
